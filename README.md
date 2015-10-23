@@ -13,15 +13,7 @@ I'll assume you have a GitHub repo with [Travis-CI][] enabled.
 
 ## Generate a GitHub OAuth token
 
-First you'll need to create a GitHub OAuth token for the weigh-in script to post status messages on your behalf. To do this, go to GitHub settings:
-
-![github settings](https://cloud.githubusercontent.com/assets/98301/10703085/9f72b15e-799b-11e5-9006-61d07f89fda3.png)
-
-Then "Peronal Access Tokens":
-
-![choose personal access tokens](https://cloud.githubusercontent.com/assets/98301/10703124/f1ac6cee-799b-11e5-84cd-8ef4ec5fce2b.png)
-
-Generate a new token:
+First you'll need to create a GitHub OAuth token for the weigh-in script to post status messages on your behalf. To do this, go to GitHub settings → "Personal Access Tokens" → "Generate a Token":
 
 ![generate new token](https://cloud.githubusercontent.com/assets/98301/10703144/173d430c-799c-11e5-8ac2-915482cacd17.png)
 
