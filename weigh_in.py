@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """Track changes in the size of a file using Travis-CI and GitHub statuses.
 
 Usage:
@@ -102,7 +103,7 @@ def format_description(current_size, previous_size):
         if delta == 0:
             return 'No change ({:,.0f} bytes)'.format(current_size)
         pct = 100.0 * delta / current_size
-        return '{:+,.0f} bytes ({:+0.2f}%) --> {:,.0f} bytes'.format(
+        return '{:+,.0f} bytes ({:+0.2f}%) → {:,.0f} bytes'.format(
                 delta, pct, current_size)
     return '{:,d} bytes'.format(current_size)
 
