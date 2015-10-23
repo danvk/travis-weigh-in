@@ -1,4 +1,6 @@
 sudo: false  # Use container-based infrastructure
 language: python
 
-script: ./weigh_in.py weigh_in.py
+script: >
+    env &&
+    ./weigh_in.py weigh_in.py
