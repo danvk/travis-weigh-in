@@ -14,5 +14,6 @@ def test_inverses():
     ]
     for current_size, prev_size in vals:
         desc = weigh_in.format_description(current_size, prev_size)
-        back_size = weigh_in.parse_description(desc)
-        assert back_size == current_size, (desc, back_size)
+        back_cur_size, back_prev_size = weigh_in.parse_description(desc)
+        assert back_cur_size == current_size, (desc, back_cur_size)
+        assert back_prev_size == prev_size, (desc, back_prev_size)
