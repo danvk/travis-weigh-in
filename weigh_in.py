@@ -19,9 +19,10 @@ import sys
 import json
 import urllib2
 
-TRAVIS_COMMIT = os.environ['TRAVIS_COMMIT']
+TRAVIS = os.environ.get('TRAVIS')
+TRAVIS_COMMIT = os.environ.get('TRAVIS_COMMIT')
 TRAVIS_PULL_REQUEST = os.environ.get('TRAVIS_PULL_REQUEST')
-TRAVIS_REPO_SLUG = os.environ['TRAVIS_REPO_SLUG']
+TRAVIS_REPO_SLUG = os.environ.get('TRAVIS_REPO_SLUG')
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 
 if TRAVIS_PULL_REQUEST == 'false':
@@ -94,7 +95,7 @@ def get_base_size(filename):
     if not status:
         print 'Unable to find status %s for base at %s' % (filename, url)
         return None
-    return parse_description(status)
+    return parse_description(status)[0]
 
 
 def format_description(current_size, previous_size):
@@ -111,50 +112,63 @@ def format_description(current_size, previous_size):
 def parse_description(description):
     m = re.search(r'([0-9,]+) bytes\)?$', description)
     assert m, 'Unable to parse "%s"' % description
-    return int(m.group(1).replace(',', '').replace(' bytes', ''))
+    current_size = int(m.group(1).replace(',', '').replace(' bytes', ''))
+
+    prev_size = None
+    m = re.search(r'([-+][0-9,]+) bytes', description)
+    if m:
+        delta = int(m.group(1).replace(',', '').replace(' bytes', ''))
+        prev_size = current_size - delta
+    elif 'No change' in description:
+        prev_size = current_size
+
+    return current_size, prev_size
 
 
-def test_inverses():
-    """format_description and parse_description must be inverses."""
-    # TODO: move this into a test module
-    vals = [
-        (123456, 122456),
-        (123456, None),
-        (123456, 123456),
-        (122456, 123456),
-        (12345678, 12345679)
-    ]
-    for current_size, prev_size in vals:
-        desc = format_description(current_size, prev_size)
-        back_size = parse_description(desc)
-        assert back_size == current_size, (desc, back_size)
+def check_environment():
+    if not GITHUB_TOKEN:
+        sys.stderr.write('The GITHUB_TOKEN environment variable must be set.\n')
+        sys.exit(1)
+
+    if not TRAVIS:
+        sys.stderr.write('Not Travis; exiting\n')
+        sys.exit(0)
+
+    if not TRAVIS_COMMIT:
+        sys.stderr.write('Missing TRAVIS_COMMIT\n')
+        sys.exit(1)
+        
+    if not TRAVIS_REPO_SLUG:
+        sys.stderr.write('Missing TRAVIS_REPO_SLUG\n')
+        sys.exit(1)
 
 
 if __name__ == '__main__':
-    test_inverses()
     if len(sys.argv) != 2:
         sys.stderr.write('Usage: %s path/to/file\n' % sys.argv[0])
         sys.exit(1)
     filename = sys.argv[1]
 
-    if not GITHUB_TOKEN:
-        sys.stderr.write('The GITHUB_TOKEN environment variable must be set.\n')
-        sys.exit(1)
-
-    if not os.environ.get('TRAVIS'):
-        print 'Not Travis; exiting'
-        sys.exit(0)
+    check_environment()
 
     current_size = os.stat(filename).st_size
     previous_size = get_base_size(filename)
 
-    print 'Current: %s' % current_size
-    print 'Previous: %s' % previous_size
+    print '%s Current:  %s' % (filename, current_size)
+    print '%s Previous: %s' % (filename, previous_size)
 
     if TRAVIS_STATUS_URL:
         url = TRAVIS_STATUS_URL
     else:
         url = 'https://api.github.com/repos/%s/statuses/%s' % (TRAVIS_REPO_SLUG, TRAVIS_COMMIT)
+
+    prev_status = get_status(url, filename)
+    if prev_status:
+        old_cur, old_prev = parse_description(prev_status)
+        print 'Previous status was "%s" => %s / %s' % (prev_status, old_cur, old_prev)
+        if old_prev and not previous_size:
+            print 'Since I have no delta information, I will refrain from POSTing.'
+            sys.exit(0)
 
     print 'POSTing to %s' % url
     post_status(url, 'success', filename, format_description(current_size, previous_size))
