@@ -80,20 +80,16 @@ def get_pr_info(slug, pull_number):
 
 def get_base_size(filename):
     global TRAVIS_STATUS_URL
-    print 'TRAVIS_PULL_REQUEST: %s' % TRAVIS_PULL_REQUEST
     if not TRAVIS_PULL_REQUEST:
         return None
     pr = get_pr_info(TRAVIS_REPO_SLUG, TRAVIS_PULL_REQUEST)
-    print json.dumps(pr, indent=2)
     sha = pr['base']['sha']
     url = pr['base']['repo']['statuses_url'].replace('{sha}', sha)
     TRAVIS_STATUS_URL = pr['statuses_url']
-    print 'base sha %s' % sha
-    print 'statuses url %s' % url
     assert sha in url, 'statuses_url %s missing "{sha}"' % url
     status = get_status(url, filename)
     if not status:
-        print 'Unable to find status %s for base at %s' % (filename, url)
+        sys.stderr.write('Unable to find status %s for base at %s\n' % (filename, url))
         return None
     return parse_description(status)[0]
 
