@@ -50,4 +50,10 @@ Either push this commit to your repo or send it out as a pull request. The first
 
 If you don't see code sizes posted, check out the logs of your Travis-CI builds for details on what went wrong.
 
+# Notes
+
+If you rename the file, the weigh-in script won't be able to track size changes through the rename. You'll get size change information for subsequent commits after the rename is merged onto `master`, though.
+
+In a pull request, the "push" build pushes an absolute code size, while the "pr" build pushes a size with changes (e.g. "+10 bytes"). If the "push" build finishes first, you'll see the absolute size before you see the delta.
+
 [Travis-CI]: https://travis-ci.org/
