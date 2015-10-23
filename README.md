@@ -48,4 +48,6 @@ script: >
 
 Either push this commit to your repo or send it out as a pull request. The first run will only show an absolute size (i.e. no changes), but subsequent runs should show how the commit/PR changes the size of the file.
 
+If you don't see code sizes posted, check out the logs of your Travis-CI builds for details on what went wrong.
+
 [Travis-CI]: https://travis-ci.org/
