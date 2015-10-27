@@ -56,4 +56,12 @@ If you rename the file, the weigh-in script won't be able to track size changes 
 
 In a pull request, the "push" build pushes an absolute code size, while the "pr" build pushes a size with changes (e.g. "+10 bytes"). If the "push" build finishes first, you'll see the absolute size before you see the delta.
 
+The code in the `master` branch can and will change. If you'd prefer not to trust me, you should either include a copy of the script directly in your own repo, use a submodule checked out at a specific commit or download a copy with a recent git SHA, e.g.
+
+```
+curl -O https://raw.githubusercontent.com/danvk/travis-weigh-in/08700622d972fed7adeda13a49988e26a3e98387/weigh_in.py
+```
+
+git SHAs are cryptographically secure, so you can be confident that the script won't break underneath you.
+
 [Travis-CI]: https://travis-ci.org/
