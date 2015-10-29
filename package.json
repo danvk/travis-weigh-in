@@ -1,0 +1,26 @@
+{
+  "name": "travis-weigh-in",
+  "version": "1.0.0",
+  "description": "Track how each commit/pull request affects the size of a file in your repo",
+  "main": "index.js",
+  "scripts": {
+    "test": "nosetests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danvk/travis-weigh-in.git"
+  },
+  "keywords": [
+    "travis",
+    "github",
+    "minification",
+    "bloat",
+    "size"
+  ],
+  "author": "Dan Vanderkam (danvdk@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danvk/travis-weigh-in/issues"
+  },
+  "homepage": "https://github.com/danvk/travis-weigh-in#readme"
+}
