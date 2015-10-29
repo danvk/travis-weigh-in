@@ -1,3 +1,5 @@
+ [![NPM version](http://img.shields.io/npm/v/travis-weigh-in.svg)](https://www.npmjs.org/package/travis-weigh-in)
+ 
 # travis-weigh-in
 Track how each commit/pull request affects the size of a file in your repo.
 
@@ -31,7 +33,7 @@ Don't forget to click the "Add" button!
 
 ## Run the weigh-in script
 
-With the token in place, you need to run the script from your `.travis.yml` file. You can either save a copy of the `weigh_in.py` script into your repo, add it as a git submodule, or just `curl` it into place. The script is intentionally written to have zero dependencies so, however you pull it in, installation is easy.
+With the token in place, you need to run the script from your `.travis.yml` file. You can either `npm install travis-weigh-in`, save a copy of the `weigh_in.py` script into your repo, add it as a git submodule, or just `curl` it into place. The script is intentionally written to have zero dependencies so, however you pull it in, it should Just Work.
 
 For example, for a JavaScript project, your `.travis.yml` file might look like this:
 
@@ -49,6 +51,26 @@ script: >
 Either push this commit to your repo or send it out as a pull request. The first run will only show an absolute size (i.e. no changes), but subsequent runs should show how the commit/PR changes the size of the file.
 
 If you don't see code sizes posted, check out the logs of your Travis-CI builds for details on what went wrong.
+
+## Setup with NPM
+
+This script is most useful for JavaScript projects, which often use NPM to pull in dependencies. If this is convenient for you, you can set up travis-weigh-in by running:
+
+    npm install --save-dev travis-weigh-in
+    
+Then your `.travis.yml` file might look like:
+
+```
+language: node_js
+node_js:
+  - "0.12"
+script: >
+    npm run build &&
+    npm run test &&
+    python node_modules/travis-weigh-in/weigh_in.py dist/script-to-track.min.js
+```
+
+Note that you still have to go through the process of setting `GITHUB_TOKEN` with this approach.
 
 # Notes
 
