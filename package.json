@@ -1,6 +1,6 @@
 {
   "name": "travis-weigh-in",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Track how each commit/pull request affects the size of a file in your repo",
   "main": "index.js",
   "scripts": {
